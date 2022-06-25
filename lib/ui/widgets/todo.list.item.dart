@@ -1,39 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:task_list/models/todo.dart';
 
-class TodoListItem extends StatefulWidget {
-  const TodoListItem({Key? key}) : super(key: key);
+class TodoListItem extends StatelessWidget {
+  final Todo todo;
+  final Function(Todo) onDelete;
 
-  @override
-  State<TodoListItem> createState() => _TodoListItemState();
-}
+  const TodoListItem({
+    Key? key,
+    required this.todo,
+    required this.onDelete
+  }) : super(key: key);
 
-class _TodoListItemState extends State<TodoListItem> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey[200],
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50)
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
-            "20/11/2015",
-            style: TextStyle(
-              fontSize: 12
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Slidable(
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          extentRatio: 0.2,
+          children: [
+            SlidableAction(
+              onPressed: (context){
+                onDelete(todo);
+              },
+              backgroundColor: Colors.red,
+              icon: Icons.delete,
             ),
+          ],
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: Colors.grey[200],
           ),
-          Text(
-            "Tarefa 123",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          )
-        ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                todo.dateTimeBr(),
+                style: const TextStyle(fontSize: 12),
+              ),
+              Text(
+                todo.title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
+
